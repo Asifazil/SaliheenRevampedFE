@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'; // useCallback kept for carousel handlers
-import { FiTrash2, FiSave, FiUpload, FiImage, FiFilm, FiLayout } from 'react-icons/fi';
+import { FiSave, FiUpload, FiImage, FiFilm, FiLayout } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import API from '../../utils/api';
 import { getImageUrl } from '../../utils/api';

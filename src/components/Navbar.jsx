@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FiShoppingBag, FiUser, FiMenu, FiX, FiLogOut, FiSettings, FiPackage, FiSearch } from 'react-icons/fi';
+import { FiShoppingBag, FiUser, FiMenu, FiX, FiLogOut, FiSettings, FiPackage } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import API from '../utils/api';

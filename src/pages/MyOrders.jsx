@@ -86,7 +86,6 @@ function StatusTimeline({ status }) {
         {STATUS_STEPS.map((step, i) => {
           const done = i < currentIdx;
           const current = i === currentIdx;
-          const future = i > currentIdx;
           return (
             <div key={step.key} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', paddingBottom: i < STATUS_STEPS.length - 1 ? '1rem' : 0, position: 'relative' }}>
               {/* Connector line */}

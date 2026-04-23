@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   FiSearch, FiPhone, FiHash, FiPackage, FiChevronDown, FiChevronUp,
-  FiMapPin, FiCalendar, FiShoppingBag, FiX
+  FiMapPin, FiShoppingBag, FiX
 } from 'react-icons/fi';
 import API from '../utils/api';
 import { getImageUrl } from '../utils/api';
@@ -57,7 +57,6 @@ function StatusTimeline({ status }) {
         {STATUS_STEPS.map((step, i) => {
           const done = i < currentIdx;
           const current = i === currentIdx;
-          const future = i > currentIdx;
           return (
             <div key={step.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '20%', textAlign: 'center', gap: '0.5rem' }}>
               <div style={{

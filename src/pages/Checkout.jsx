@@ -6,7 +6,7 @@ import API from '../utils/api';
 import { getImageUrl } from '../utils/api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import LoadingSpinner from '../components/LoadingSpinner';
+
 
 export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
@@ -34,7 +34,7 @@ export default function Checkout() {
     if (items.length === 0) navigate('/');
     API.get('/api/settings').then(({ data }) => setSettings(data)).catch(() => {});
     API.get('/api/coupons/checkout').then(({ data }) => setCheckoutCoupons(data)).catch(() => {});
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
 
