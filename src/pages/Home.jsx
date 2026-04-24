@@ -192,9 +192,6 @@ export default function Home() {
                           {img.subcaption}
                         </p>
                       )}
-                      <Link to="/shop" className="btn btn-primary btn-lg" style={{ marginTop: '1.25rem' }}>
-                        Explore Collection <FiArrowRight />
-                      </Link>
                     </div>
                   )}
                 </div>
@@ -204,11 +201,10 @@ export default function Home() {
 
           {/* Welcome overlay — always present, sits above the sliding images */}
           <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0,
+            position: 'absolute', inset: 0,
             zIndex: 10, pointerEvents: 'none',
-            display: 'flex', flexDirection: 'column', alignItems: 'center',
-            paddingTop: 'clamp(2.5rem, 8vh, 6rem)',
-            textAlign: 'center', padding: 'clamp(2.5rem, 8vh, 6rem) 2rem 0'
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            textAlign: 'center', padding: '0 2rem', paddingBottom: '18vh'
           }}>
             <p style={{
               fontFamily: 'var(--font-accent)',
@@ -244,10 +240,14 @@ export default function Home() {
               color: 'rgba(255,255,255,0.75)',
               fontStyle: 'italic',
               textShadow: '0 2px 16px rgba(0,0,0,0.9)',
-              letterSpacing: '0.05em'
+              letterSpacing: '0.05em',
+              marginBottom: '2rem'
             }}>
               {landing?.heroSubtitle || settings?.storeTagline || 'The Essence of Luxury'}
             </p>
+            <Link to="/shop" className="btn btn-primary btn-lg" style={{ pointerEvents: 'auto' }}>
+              Explore Collection <FiArrowRight />
+            </Link>
           </div>
         </div>
       ) : (
