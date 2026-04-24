@@ -38,6 +38,7 @@ import ContactUs from './pages/policies/ContactUs';
 function App() {
   useEffect(() => {
     API.get('/api/settings').then(({ data }) => {
+      if (window.location.pathname.startsWith('/admin')) return;
       const theme = data.theme || 'midnight-gold';
       document.documentElement.setAttribute('data-theme', theme);
     }).catch(() => {});
@@ -67,6 +68,13 @@ function App() {
 }
 
 function MainLayout() {
+  useEffect(() => {
+    API.get('/api/settings').then(({ data }) => {
+      const theme = data.theme || 'midnight-gold';
+      document.documentElement.setAttribute('data-theme', theme);
+    }).catch(() => {});
+  }, []);
+
   return (
     <>
       <Navbar />

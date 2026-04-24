@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { FiGrid, FiPackage, FiShoppingBag, FiTag, FiSettings, FiLayout, FiMapPin, FiMenu, FiX, FiLogOut, FiHome } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
@@ -18,6 +18,10 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useAuth();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', 'clean-white');
+  }, []);
 
   const handleLogout = () => { logout(); navigate('/'); };
 

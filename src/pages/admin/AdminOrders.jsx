@@ -12,6 +12,19 @@ const statusColors = {
   shipped: '#9b59b6', delivered: '#2ecc71', cancelled: '#e74c3c'
 };
 
+// Bulk packing slips — one slip per page
+function BulkPackingSlips({ orders }) {
+  return (
+    <div>
+      {orders.map((order, i) => (
+        <div key={order._id} style={{ pageBreakAfter: i < orders.length - 1 ? 'always' : 'auto' }}>
+          <PackingSlip order={order} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // Packing slip — rendered off-screen, printed cleanly
 function PackingSlip({ order }) {
   if (!order) return null;
@@ -94,10 +107,36 @@ export default function AdminOrders() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
   const printRef = useRef();
+  const bulkPrintRef = useRef();
+
+  const toggleSelect = (id) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const allOnPageSelected = orders.length > 0 && orders.every(o => selectedIds.has(o._id));
+  const toggleAll = () => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (allOnPageSelected) {
+        orders.forEach(o => next.delete(o._id));
+      } else {
+        orders.forEach(o => next.add(o._id));
+      }
+      return next;
+    });
+  };
+
+  const selectedOrders = orders.filter(o => selectedIds.has(o._id));
 
   const fetchOrders = () => {
     setLoading(true);
+    setSelectedIds(new Set());
     const params = new URLSearchParams({ page, limit: 15 });
     if (search) params.append('search', search);
     if (statusFilter) params.append('status', statusFilter);
@@ -149,6 +188,11 @@ export default function AdminOrders() {
     documentTitle: `PackingSlip-${selectedOrder?.orderId}`
   });
 
+  const handleBulkPrint = useReactToPrint({
+    content: () => bulkPrintRef.current,
+    documentTitle: `PackingSlips-Bulk-${selectedIds.size}`
+  });
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
@@ -156,9 +200,16 @@ export default function AdminOrders() {
           <h1 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold)', fontSize: '1.8rem', marginBottom: '0.2rem' }}>Orders</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{total} total order{total !== 1 ? 's' : ''}</p>
         </div>
-        <button onClick={() => setShowResetConfirm(true)} className="btn btn-danger btn-sm">
-          <FiTrash2 size={13} /> Reset All Orders
-        </button>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          {selectedIds.size > 0 && (
+            <button onClick={handleBulkPrint} className="btn btn-outline btn-sm">
+              <FiPrinter size={13} /> Print Selected ({selectedIds.size})
+            </button>
+          )}
+          <button onClick={() => setShowResetConfirm(true)} className="btn btn-danger btn-sm">
+            <FiTrash2 size={13} /> Reset All Orders
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -185,6 +236,15 @@ export default function AdminOrders() {
           <table className="data-table">
             <thead>
               <tr>
+                <th style={{ width: '40px', textAlign: 'center' }}>
+                  <input
+                    type="checkbox"
+                    checked={allOnPageSelected}
+                    onChange={toggleAll}
+                    title="Select all on this page"
+                    style={{ accentColor: 'var(--gold)', width: '15px', height: '15px', cursor: 'pointer' }}
+                  />
+                </th>
                 {['Order ID', 'Customer', 'Items', 'Total', 'Payment', 'Order Status', 'Date', 'Actions'].map(h => (
                   <th key={h}>{h}</th>
                 ))}
@@ -192,9 +252,17 @@ export default function AdminOrders() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={8} style={{ textAlign: 'center', padding: '3rem' }}><div className="spinner" style={{ margin: '0 auto' }} /></td></tr>
+                <tr><td colSpan={9} style={{ textAlign: 'center', padding: '3rem' }}><div className="spinner" style={{ margin: '0 auto' }} /></td></tr>
               ) : orders.map(o => (
-                <tr key={o._id}>
+                <tr key={o._id} style={{ background: selectedIds.has(o._id) ? 'rgba(201,168,76,0.06)' : undefined }}>
+                  <td style={{ textAlign: 'center' }}>
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(o._id)}
+                      onChange={() => toggleSelect(o._id)}
+                      style={{ accentColor: 'var(--gold)', width: '15px', height: '15px', cursor: 'pointer' }}
+                    />
+                  </td>
                   <td style={{ color: 'var(--gold)', fontWeight: 600, fontSize: '0.78rem', letterSpacing: '0.03em' }}>{o.orderId}</td>
                   <td>
                     <p style={{ fontWeight: 500, fontSize: '0.85rem' }}>{o.customerInfo?.name}</p>
@@ -252,9 +320,10 @@ export default function AdminOrders() {
         </div>
       )}
 
-      {/* Hidden packing slip for print */}
+      {/* Hidden packing slips for print */}
       <div style={{ display: 'none' }}>
         <div ref={printRef}><PackingSlip order={selectedOrder} /></div>
+        <div ref={bulkPrintRef}><BulkPackingSlips orders={selectedOrders} /></div>
       </div>
 
       {/* Order Detail Panel */}

@@ -216,6 +216,8 @@ export default function AdminSettings() {
               { id: 'amethyst-dark',  label: 'Amethyst Dark',   swatch: ['#8b5cf6', '#6d28d9', '#080808'] },
               { id: 'ivory-light',    label: 'Ivory Light',     swatch: ['#a07820', '#c09030', '#f5f0e8'] },
               { id: 'onyx-black',     label: 'Onyx Black',      swatch: ['#f0c040', '#c09020', '#000000'] },
+              { id: 'white-gold',     label: 'White & Gold',    swatch: ['#b8860b', '#7a5608', '#ffffff'] },
+              { id: 'clean-white',    label: 'Clean White',     swatch: ['#8b7355', '#5a4838', '#ffffff'] },
             ].map(t => {
               const active = settings.theme === t.id;
               return (
@@ -223,7 +225,6 @@ export default function AdminSettings() {
                   key={t.id} type="button"
                   onClick={() => {
                     setSettings(prev => ({ ...prev, theme: t.id }));
-                    document.documentElement.setAttribute('data-theme', t.id);
                   }}
                   style={{
                     background: active ? 'rgba(var(--accent-rgb),0.08)' : 'var(--black-surface)',

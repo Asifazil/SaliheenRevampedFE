@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import YouTube from 'react-youtube';
@@ -123,22 +123,6 @@ const QUOTES = [
   { text: 'Wewangian adalah jiwa yang mengalir ke seluruh alam', language: 'Indonesian', author: 'Chairil Anwar', englishMeaning: 'Fragrance is the soul that flows through all of nature' },
 ];
 
-/* ─── Simple IntersectionObserver hook ─── */
-function useSectionInView(threshold = 0.12) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return [ref, visible];
-}
 
 export default function Home() {
   const [landing, setLanding] = useState(null);
@@ -147,8 +131,6 @@ export default function Home() {
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [activeQuote, setActiveQuote] = useState(0);
-  const [processRef, processVisible] = useSectionInView();
-  const [attarRef, attarVisible] = useSectionInView();
 
   useEffect(() => {
     Promise.all([
@@ -418,7 +400,7 @@ export default function Home() {
           <p className="section-subtitle">Six ancient steps, unchanged for a thousand years</p>
           <div className="gold-divider" />
 
-          <div ref={processRef} className="process-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginTop: '3.5rem' }}>
+          <div className="process-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginTop: '3.5rem' }}>
             {PROCESS_STEPS.map((step, i) => (
               <div key={i} className="process-card" style={{
                 background: 'linear-gradient(160deg, var(--black-card) 0%, var(--black-rich) 100%)',
@@ -426,8 +408,7 @@ export default function Home() {
                 borderRadius: 'var(--radius-xl)',
                 padding: '2rem 1.75rem 1.75rem',
                 position: 'relative', overflow: 'hidden', cursor: 'default',
-                animation: processVisible ? `fadeInUp 0.55s ease ${i * 0.09}s both` : 'none',
-                opacity: processVisible ? undefined : 0,
+                animation: `fadeInUp 0.55s ease ${i * 0.09}s both`,
                 transition: 'border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease'
               }}
                 onMouseEnter={e => {
@@ -489,7 +470,7 @@ export default function Home() {
           <p className="section-subtitle">The difference you can feel — and sense</p>
           <div className="gold-divider" />
 
-          <div ref={attarRef} className="attar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem', marginTop: '3.5rem' }}>
+          <div className="attar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem', marginTop: '3.5rem' }}>
             {ATTAR_VIRTUES.map((v, i) => (
               <div key={i} style={{
                 background: 'linear-gradient(145deg, var(--black-card), var(--black-surface))',
@@ -497,8 +478,7 @@ export default function Home() {
                 borderRadius: 'var(--radius-xl)',
                 padding: '2rem 2rem 1.75rem',
                 display: 'flex', gap: '1.5rem', alignItems: 'flex-start',
-                animation: attarVisible ? `fadeInUp 0.55s ease ${i * 0.12}s both` : 'none',
-                opacity: attarVisible ? undefined : 0,
+                animation: `fadeInUp 0.55s ease ${i * 0.12}s both`,
                 transition: 'border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease',
                 position: 'relative', overflow: 'hidden'
               }}
@@ -581,29 +561,29 @@ export default function Home() {
             <p className="section-subtitle">A Saliheen store near you</p>
             <div className="gold-divider" />
             <div style={{ maxWidth: '700px', margin: '0 auto', position: 'relative' }}>
-              <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'linear-gradient(to bottom, transparent, var(--gold-dark), transparent)', transform: 'translateX(-50%)' }} />
+              <div className="branch-spine" style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: '1px', background: 'linear-gradient(to bottom, transparent, var(--gold-dark), transparent)', transform: 'translateX(-50%)' }} />
               {branches.map((branch, i) => (
-                <div key={branch._id} style={{ display: 'flex', flexDirection: i % 2 === 0 ? 'row' : 'row-reverse', gap: '2rem', marginBottom: '3rem', position: 'relative', alignItems: 'flex-start' }}>
-                  <div style={{ position: 'absolute', left: '50%', top: '16px', width: '14px', height: '14px', borderRadius: '50%', background: branch.isComingSoon ? 'var(--black-surface)' : 'var(--gold)', border: '2px solid var(--gold)', transform: 'translateX(-50%)', zIndex: 1, boxShadow: branch.isComingSoon ? 'none' : '0 0 10px rgba(var(--accent-rgb),0.5)' }} />
-                  <div style={{ width: '45%', background: 'var(--black-card)', border: '1px solid var(--black-border)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', transition: 'var(--transition)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                      <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold)', fontSize: '1rem' }}>{branch.name}</h3>
-                      {branch.isComingSoon && <span className="badge badge-warning" style={{ fontSize: '0.65rem' }}>Coming Soon</span>}
+                <div key={branch._id} className="branch-row" style={{ display: 'flex', flexDirection: i % 2 === 0 ? 'row' : 'row-reverse', gap: '2rem', marginBottom: '3rem', position: 'relative', alignItems: 'flex-start' }}>
+                  <div className="branch-node" style={{ position: 'absolute', left: '50%', top: '16px', width: '14px', height: '14px', borderRadius: '50%', background: branch.isComingSoon ? 'var(--black-surface)' : 'var(--gold)', border: '2px solid var(--gold)', transform: 'translateX(-50%)', zIndex: 1, boxShadow: branch.isComingSoon ? 'none' : '0 0 10px rgba(var(--accent-rgb),0.5)' }} />
+                  <div className="branch-card" style={{ width: '45%', background: 'var(--black-card)', border: '1px solid var(--black-border)', borderRadius: 'var(--radius-lg)', padding: '1.25rem', transition: 'var(--transition)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                      <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold)', fontSize: '0.95rem', lineHeight: 1.3 }}>{branch.name}</h3>
+                      {branch.isComingSoon && <span className="badge badge-warning" style={{ fontSize: '0.6rem', flexShrink: 0 }}>Coming Soon</span>}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.4rem', marginBottom: '0.4rem' }}>
                       <FiMapPin size={13} color="var(--gold)" style={{ marginTop: '2px', flexShrink: 0 }} />
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', lineHeight: 1.5 }}>{branch.address}</p>
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', lineHeight: 1.55, wordBreak: 'break-word' }}>{branch.address}</p>
                     </div>
                     {branch.phone && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.4rem' }}>
-                        <FiPhone size={13} color="var(--text-muted)" />
-                        <a href={`tel:${branch.phone}`} style={{ color: 'var(--text-secondary)', fontSize: '0.82rem', textDecoration: 'none' }}>{branch.phone}</a>
+                        <FiPhone size={13} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                        <a href={`tel:${branch.phone}`} style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textDecoration: 'none', wordBreak: 'break-all' }}>{branch.phone}</a>
                       </div>
                     )}
                     {branch.timings && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
-                        <FiClock size={13} color="var(--text-muted)" />
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>{branch.timings}</span>
+                        <FiClock size={13} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{branch.timings}</span>
                       </div>
                     )}
                     {branch.googleMapLink && !branch.isComingSoon && (
@@ -612,10 +592,20 @@ export default function Home() {
                       </a>
                     )}
                   </div>
-                  <div style={{ width: '45%' }} />
+                  <div className="branch-spacer" style={{ width: '45%' }} />
                 </div>
               ))}
             </div>
+
+            <style>{`
+              @media (max-width: 600px) {
+                .branch-spine { left: 14px !important; transform: none !important; }
+                .branch-row   { flex-direction: column !important; padding-left: 2.25rem; gap: 0 !important; }
+                .branch-card  { width: 100% !important; }
+                .branch-spacer{ display: none !important; }
+                .branch-node  { left: 14px !important; transform: translateX(-50%) !important; }
+              }
+            `}</style>
           </div>
         </section>
       )}
