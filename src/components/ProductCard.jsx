@@ -18,9 +18,9 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="card" style={{ position: 'relative', overflow: 'hidden' }}>
+    <div className="card product-card" style={{ position: 'relative', overflow: 'hidden' }}>
       <Link to={`/product/${product._id}`} style={{ textDecoration: 'none', display: 'block' }}>
-        <div style={{ position: 'relative', paddingTop: '120%', overflow: 'hidden', background: 'var(--black-surface)' }}>
+        <div className="card-image" style={{ position: 'relative', paddingTop: '120%', overflow: 'hidden', background: 'var(--black-surface)' }}>
           <img
             src={getImageUrl(product.images?.[0])}
             alt={product.name}
@@ -54,7 +54,7 @@ export default function ProductCard({ product }) {
         </div>
       </Link>
 
-      <div style={{ padding: '1rem' }}>
+      <div className="card-body" style={{ padding: '1rem' }}>
         <Link to={`/product/${product._id}`} style={{ textDecoration: 'none' }}>
           <h3 style={{
             fontFamily: 'var(--font-heading)', fontSize: '1rem',
@@ -67,7 +67,7 @@ export default function ProductCard({ product }) {
 
         <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
           {product.variants?.map(v => (
-            <button key={v.ml} onClick={() => setSelectedMl(v.ml)} style={{
+            <button key={v.ml} onClick={() => setSelectedMl(v.ml)} className="variant-btn" style={{
               padding: '0.25rem 0.6rem',
               borderRadius: 'var(--radius)',
               background: selectedMl === v.ml ? 'var(--gold-dark)' : 'var(--black-surface)',
@@ -81,7 +81,7 @@ export default function ProductCard({ product }) {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ color: 'var(--gold)', fontWeight: 700, fontSize: '1.1rem' }}>
+          <span className="price" style={{ color: 'var(--gold)', fontWeight: 700, fontSize: '1.1rem' }}>
             ₹{selectedVariant?.price?.toLocaleString() || '—'}
           </span>
           <button onClick={handleAddToCart} className="btn btn-primary btn-sm" style={{ gap: '0.4rem' }}>
@@ -89,6 +89,17 @@ export default function ProductCard({ product }) {
           </button>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 480px) {
+          .product-card .card-image { padding-top: 90% !important; }
+          .product-card { font-size: 0.82rem; }
+          .product-card h3 { font-size: 0.85rem !important; margin-bottom: 0.35rem !important; }
+          .product-card .card-body { padding: 0.65rem !important; }
+          .product-card .variant-btn { padding: 0.18rem 0.45rem !important; font-size: 0.7rem !important; }
+          .product-card .price { font-size: 0.95rem !important; }
+        }
+      `}</style>
     </div>
   );
 }

@@ -179,20 +179,20 @@ export default function Home() {
                 <div style={{ position: 'relative', height: 'calc(100vh - 70px)', minHeight: '500px', overflow: 'hidden' }}>
                   <img src={getImageUrl(img.url)} alt={img.alt || `Slide ${i + 1}`}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.65))' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.7) 100%)' }} />
                   {(img.caption || img.subcaption) && (
-                    <div style={{ position: 'absolute', bottom: '15%', left: 0, right: 0, textAlign: 'center', padding: '0 2rem' }}>
+                    <div style={{ position: 'absolute', bottom: '10%', left: 0, right: 0, textAlign: 'center', padding: '0 2rem' }}>
                       {img.caption && (
-                        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem,5vw,4rem)', color: 'var(--gold-pale)', marginBottom: '0.75rem', textShadow: '0 2px 20px rgba(0,0,0,0.8)' }} className="gold-glow">
+                        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.5rem,4vw,3rem)', color: 'var(--gold-pale)', marginBottom: '0.5rem', textShadow: '0 2px 20px rgba(0,0,0,0.9)' }}>
                           {img.caption}
-                        </h1>
+                        </h2>
                       )}
                       {img.subcaption && (
-                        <p style={{ fontFamily: 'var(--font-accent)', fontSize: 'clamp(1rem,2vw,1.5rem)', color: 'var(--gold)', fontStyle: 'italic', textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
+                        <p style={{ fontFamily: 'var(--font-accent)', fontSize: 'clamp(0.9rem,2vw,1.3rem)', color: 'var(--gold)', fontStyle: 'italic', textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
                           {img.subcaption}
                         </p>
                       )}
-                      <Link to="/shop" className="btn btn-primary btn-lg" style={{ marginTop: '1.5rem' }}>
+                      <Link to="/shop" className="btn btn-primary btn-lg" style={{ marginTop: '1.25rem' }}>
                         Explore Collection <FiArrowRight />
                       </Link>
                     </div>
@@ -201,6 +201,54 @@ export default function Home() {
               </div>
             ))}
           </Slider>
+
+          {/* Welcome overlay — always present, sits above the sliding images */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0,
+            zIndex: 10, pointerEvents: 'none',
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            paddingTop: 'clamp(2.5rem, 8vh, 6rem)',
+            textAlign: 'center', padding: 'clamp(2.5rem, 8vh, 6rem) 2rem 0'
+          }}>
+            <p style={{
+              fontFamily: 'var(--font-accent)',
+              fontSize: 'clamp(0.7rem, 1.8vw, 1rem)',
+              color: 'var(--gold)',
+              letterSpacing: '0.4em',
+              textTransform: 'uppercase',
+              textShadow: '0 2px 16px rgba(0,0,0,0.9)',
+              marginBottom: '0.6rem',
+              opacity: 0.9
+            }}>
+              Welcome to
+            </p>
+            <h1 className="welcome-title" style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(2rem, 6vw, 5rem)',
+              lineHeight: 1.05,
+              marginBottom: '1rem'
+            }}>
+              Saliheen Perfumes
+            </h1>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '0.75rem',
+              marginBottom: '0.75rem'
+            }}>
+              <div style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, transparent, var(--gold))' }} />
+              <span style={{ color: 'var(--gold)', fontSize: '0.7rem', letterSpacing: '0.15em', opacity: 0.7 }}>✦</span>
+              <div style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg, var(--gold), transparent)' }} />
+            </div>
+            <p style={{
+              fontFamily: 'var(--font-accent)',
+              fontSize: 'clamp(0.8rem, 1.8vw, 1.1rem)',
+              color: 'rgba(255,255,255,0.75)',
+              fontStyle: 'italic',
+              textShadow: '0 2px 16px rgba(0,0,0,0.9)',
+              letterSpacing: '0.05em'
+            }}>
+              {landing?.heroSubtitle || settings?.storeTagline || 'The Essence of Luxury'}
+            </p>
+          </div>
         </div>
       ) : (
         <div style={{ height: 'calc(100vh - 70px)', minHeight: '500px', background: 'linear-gradient(135deg,#0a0a00,#1a1200,#0a0a00)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '2rem', position: 'relative', overflow: 'hidden' }}>
@@ -449,9 +497,28 @@ export default function Home() {
         </div>
 
         <style>{`
-          @keyframes fadeInUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-          @keyframes scaleIn  { from { opacity:0; transform:scale(0.82); } to { opacity:1; transform:scale(1); } }
-          @keyframes floatY   { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+          @keyframes fadeInUp      { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+          @keyframes scaleIn       { from { opacity:0; transform:scale(0.82); } to { opacity:1; transform:scale(1); } }
+          @keyframes floatY        { 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+          @keyframes welcomeSettle { from { opacity:0; letter-spacing:0.35em; transform:translateY(18px); }
+                                     to   { opacity:1; letter-spacing:0.1em;  transform:translateY(0); } }
+          @keyframes shimmerSweep  { 0%   { background-position: -250% center; }
+                                     100% { background-position: 350% center; } }
+          .welcome-title {
+            background: linear-gradient(105deg,
+              var(--gold-pale) 15%,
+              var(--gold)      35%,
+              #ffffff          50%,
+              var(--gold)      65%,
+              var(--gold-pale) 85%
+            );
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: welcomeSettle 4.5s cubic-bezier(0.16,1,0.3,1) both,
+                       shimmerSweep  14s ease-in-out 5s infinite;
+          }
           @media (max-width: 900px) { .process-grid { grid-template-columns: repeat(2,1fr) !important; } }
           @media (max-width: 540px) { .process-grid { grid-template-columns: 1fr !important; } }
         `}</style>

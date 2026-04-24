@@ -78,8 +78,6 @@ export default function AdminProducts() {
 
   const removeExistingImage = (url) => setExistingImages(imgs => imgs.filter(i => i !== url));
 
-  const ML_OPTIONS = [3, 6, 12, 24, 50, 100];
-
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
@@ -184,10 +182,10 @@ export default function AdminProducts() {
                 </div>
                 {form.variants.map((v, i) => (
                   <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <select value={v.ml} onChange={e => updateVariant(i, 'ml', e.target.value)} className="form-control" style={{ flex: 1 }}>
-                      <option value="">Select ML</option>
-                      {ML_OPTIONS.map(ml => <option key={ml} value={ml}>{ml}ml</option>)}
-                    </select>
+                    <div style={{ position: 'relative', flex: 1 }}>
+                      <input type="number" value={v.ml} onChange={e => updateVariant(i, 'ml', e.target.value)} className="form-control" placeholder="ML" min="1" />
+                      <span style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.8rem', pointerEvents: 'none' }}>ml</span>
+                    </div>
                     <div style={{ position: 'relative', flex: 1 }}>
                       <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>₹</span>
                       <input type="number" value={v.price} onChange={e => updateVariant(i, 'price', e.target.value)} className="form-control" style={{ paddingLeft: '1.75rem' }} placeholder="Price" min="0" />
